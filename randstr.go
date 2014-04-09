@@ -6,7 +6,6 @@ import(
 
 type StringSource interface {
   Rune() rune
-  Random(src *rand.Rand)
 }
 
 type stringSource struct {
@@ -22,16 +21,20 @@ func (ss *stringSource) Rune() rune {
   return rune(chr)
 }
 
-func (ss *stringSource) Random(rnd *rand.Rand) {
-  ss.random = rnd
-}
-
 type RandString struct {
   strSrc StringSource
 }
 
-func New(rng *rand.Rand) *RandString {
-  return &RandString{rng}
+func NewSource(seed int64) StringSource {
+  randSource := rand.NewSource(seed)
+  rand := rand.New(randSource)
+  ss := &stringSource{rand}
+
+  return ss
+}
+
+func New(ss StringSource) *RandString {
+  return &RandString{ss}
 }
 
 func (rnd *RandString) Next() rune {
