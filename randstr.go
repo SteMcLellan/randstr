@@ -12,7 +12,7 @@ type stringSource struct {
   random *rand.Rand
 }
 
-func (ss *stringSource) Rune() rune {
+func (ss stringSource) Rune() rune {
   chr := ss.random.Intn(52) + 65
   if chr > 90 {
     chr = chr + 6
